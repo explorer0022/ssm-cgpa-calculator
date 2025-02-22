@@ -3,410 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic CGPA Calculator</title>
-    
+    <title>SSM CGPA Calculator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
         body {
-            font-family: 'Orbitron', sans-serif;
-            background-color: #0a0f1e;
-            color: #00ffee;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
             text-align: center;
             padding: 20px;
         }
 
-        h2 {
-            font-size: 30px;
-            text-shadow: 0px 0px 10px #00ffee;
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
 
-        label {
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        p {
             font-size: 18px;
+            margin-bottom: 20px;
         }
 
-        select, button {
-            font-size: 16px;
-            background: black;
-            color: #00ffee;
-            border: 2px solid #00ffee;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #00ffee;
+        .btn {
+            display: inline-block;
+            background: #ffcc00;
             color: black;
-            box-shadow: 0px 0px 10px #00ffee;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            border: 1px solid #00ffee;
-            padding: 10px;
-            text-align: center;
-        }
-
-        th {
-            background-color: rgba(0, 255, 238, 0.2);
-        }
-
-        .gradeSelect {
-            font-size: 16px;
-            padding: 5px;
-            background: black;
-            border: 1px solid #00ffee;
-            color: #00ffee;
-            text-align: center;
-        }
-
-        .result {
+            padding: 12px 25px;
+            font-size: 18px;
             font-weight: bold;
-            font-size: 20px;
-            margin-top: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s ease;
         }
 
-        .glow-green {
-            color: #00ff88;
-            text-shadow: 0px 0px 10px #00ff88;
+        .btn:hover {
+            background: #ffdd44;
         }
 
-        .glow-red {
-            color: #ff4444;
-            text-shadow: 0px 0px 10px #ff4444;
-        }
-
-        #screenshotButton {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #00ffee;
-            color: black;
-            border: 2px solid #00ffee;
-            cursor: pointer;
-            display: none; /* Initially hidden */
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-  <h2> SSM PTC </h2>
-<h2>  CGPA Calculator</h2>
 
-<label>Select Branch:</label>
-<select id="branchSelect" onchange="updateSemesterSelection()">
-   <option value="electronics">Electronics Engineering</option>
-    <option value="computer">Computer Engineering</option>
-    <option value="civil">Civil Engineering</option>
-     <option value="mechanical">Mechanical Engineering</option>
-    <option value="automobile">Automobile Engineering</option>
-    <option value="electrical">electrical & electronics Engineering</option>
-</select>
-
-<br><br>
-
-<label>Select Student Type:</label>
-<select id="studentType" onchange="updateSemesterSelection()">
-    <option value="normal">Normal Student</option>
-    <option value="lateral">Lateral Entry Student</option>
-</select>
-
-<br><br>
-
-<label>Select Completed Semester:</label>
-<select id="completedSemester"></select>
-
-<br><br>
-
-<button onclick="generateGradeInputs()">Generate Grades</button>
-
-<div id="output"></div>
-
-<button id="calculateButton" onclick="calculateCGPA()" style="display: none;">Calculate CGPA</button>
-
-<div id="cgpaResult" class="result"></div>
-
-<!-- Screenshot download button -->
-<button id="screenshotButton" onclick="downloadScreenshot()">Download Screenshot</button>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-
-
-<script>
-    // Define subjects for both branches
-    const branchSubjects = {
-        electronics: {
-            1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3],
-                ["Applied Chemistry", 3], ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1],
-                ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-            2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Fundamentals of Electrical & Electronics Engineering", 3],
-                ["Basic Electronics", 3], ["Communication Skills in English Lab", 1.5],
-                ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-            3: [["Electric Circuits & Networks", 3], ["Principles of Electronic Communication", 3],
-                ["Electronic Circuits", 4], ["Digital Electronics", 4], ["Principles of Electronic Communication Lab", 1.5],
-                ["Electronic Circuits Lab", 1.5], ["Digital Electronics Lab", 1.5], ["C Programming Lab", 1.5]],
-
-            4: [["Microcontroller and Applications", 4], ["Electronic Measurements & Instrumentation", 4],
-                ["Linear Integrated Circuits", 4], ["Microcontroller Lab", 1.5], ["Linear Integrated Circuits Lab", 1.5],
-                ["PCB and Prototyping Workshop", 1.5], ["Minor Project", 2]],
-
-            5: [["Embedded Systems", 4], ["Industrial Automation", 4], ["Digital Communication", 4],
-                ["Embedded Systems Lab", 1.5], ["Industrial Automation Lab", 1.5], ["Digital Communication Lab", 1.5],
-                ["Seminar", 1]],
-
-            6: [["Entrepreneurship and Startup", 4], ["Verilog HDL", 4], ["Cloud Computing", 4],
-                ["Simulation Lab", 1.5], ["Computer Hardware and Data Communication Lab", 2.5],
-                ["Verilog HDL Lab", 1.5], ["Major Project", 4]]
-        },
-        
-         computer: {
-        1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3],
-            ["Applied Chemistry", 3], ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1],
-            ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-        2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Fundamentals of Electrical & Electronics Engineering", 3],
-            ["Problem Solving and Programming", 3], ["Communication Skills in English Lab", 1.5],
-            ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-        3: [["Computer Organisation", 4], ["Programming in C", 3], ["Database Management Systems", 3],
-            ["Digital Computer Fundamentals", 3], ["Programming in C Lab", 1.5], ["Database Management System Lab", 1.5],
-            ["Digital Computer Fundamentals Lab", 1.5], ["Web Technology Lab", 2.5]],
-
-        4: [["Object Oriented Programming", 4], ["Computer Communication and Networks", 3], ["Data Structures", 4],
-            ["Object Oriented Programming Lab", 1.5], ["Web Programming Lab", 2.5], ["Data Structures Lab", 1.5],
-            ["Minor Project", 2]],
-
-        5: [["Embedded Systems & Real-Time Operating System", 4], ["Operating System", 4],
-            ["Program Elective (Choose 1)", 4], ["Embedded Systems & Real-Time Operating System Lab", 1.5],
-            ["System Administration Lab", 1.5], ["Program Elective Lab (Choose 1)", 1.5], ["Seminar", 1]],
-
-        6: [["Entrepreneurship and Startup", 4], ["Program Elective (Choose 1)", 4], ["Open Elective (Choose 1)", 4],
-            ["Computer Network Engineering Lab", 2.5], ["Smart Device Programming Lab", 1.5], 
-            ["Program Elective Lab (Choose 1)", 1.5], ["Major Project", 4]]
-    },
-    civil: {
-        1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3],
-            ["Applied Chemistry", 3], ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1],
-            ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-        2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Engineering Mechanics", 3],
-            ["Basic Surveying", 3], ["Communication Skills in English Lab", 1.5],
-            ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-        3: [["Advanced Surveying", 3], ["Concrete Technology", 3], ["Building Construction and Construction Materials", 4],
-            ["Theory of Structures", 4], ["Concrete Technology Lab", 1.5], ["Surveying Lab", 1.5],
-            ["Construction Materials Lab", 1.5], ["Building Drawing and Estimation Lab", 1.5]],
-
-        4: [["Geotechnical Engineering", 4], ["Hydraulics and Irrigation Engineering", 4], ["Estimating & Costing", 4],
-            ["Advanced Surveying Lab", 1.5], ["Hydraulics and Irrigation Engineering Lab", 1.5],
-            ["Estimating and Costing Lab", 1.5], ["Minor Project", 2]],
-
-        5: [["Design of Steel and RCC Structures", 5], ["Transportation Engineering", 4], ["Program Elective", 3],
-            ["Transportation Engineering Lab", 1.5], ["Structural Engineering Drawing Lab", 1.5],
-            ["Advanced CAD Lab", 1.5], ["Seminar", 1]],
-
-        6: [["Entrepreneurship and Startup", 4], ["Program Elective", 4], ["Open Elective", 4],
-            ["Computer Application Lab", 2.5], ["Material Testing Lab", 1.5], ["Program Elective Lab", 1.5],
-            ["Major Project", 4]]
-    },
-      mechanical: {
-        1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3],
-            ["Applied Chemistry", 3], ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1],
-            ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-        2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Engineering Mechanics", 3],
-            ["Manufacturing Technology", 3], ["Communication Skills in English Lab", 1.5],
-            ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-        3: [["Strength of Materials", 3], ["Material Science and Metrology", 3], ["Machine Tools", 4],
-            ["Fundamentals of Electrical Engineering", 4], ["Machine Drawing", 1.5], 
-            ["Material Testing and Metallography Lab", 1.5], ["Mechanical Workshop III", 1.5],
-            ["Electrical and Electronics Lab", 1.5]],
-
-        4: [["Thermal Engineering", 4], ["Fluid Mechanics and Hydraulic Machines", 4], ["Automobile Engineering", 4],
-            ["Thermal Engineering Lab", 1.5], ["Fluid Mechanics Lab", 1.5], ["Mechanical Workshop IV", 1.5],
-            ["Minor Project", 2]],
-
-        5: [["Design of Machine Elements", 4], ["Refrigeration and Air Conditioning", 4], 
-            ["Program Elective (Choose 1)", 4], ["Machine Shop Practice", 1.5], 
-            ["Hydraulic Machines Lab", 1.5], ["Program Elective Lab (Choose 1)", 1.5], ["Seminar", 1]],
-
-        6: [["Entrepreneurship and Startup", 4], ["Program Elective (Choose 1)", 4], 
-            ["Open Elective (Choose 1)", 4], ["Production Software Lab", 2.5], 
-            ["Refrigeration and Air Conditioning Lab", 1.5], ["Program Elective Lab (Choose 1)", 1.5], 
-            ["Major Project", 4]]
-   },
-     automobile: {
-        1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3], ["Applied Chemistry", 3],
-            ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1], ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-        2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Engineering Mechanics", 3], ["Basic Automobile Engineering", 3],
-            ["Communication Skills in English Lab", 1.5], ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-        3: [["Fundamentals of Fluid Mechanics", 3], ["Manufacturing Technology for Automobile Components", 3], ["Automobile Electrical and Electronics Systems", 4],
-            ["Internal Combustion Engines", 4], ["Automobile Engineering Drawing", 1.5], ["Mechanical Workshop III", 1.5], ["Petrol Engine Service Lab", 1.5], ["Automobile Electrical and Electronics Lab", 1.5]],
-
-        4: [["Heat Power Engineering", 4], ["Material Science and Strength of Materials", 4], ["Automobile Chassis and Transmission", 4],
-            ["Diesel Engine Service Lab", 1.5], ["Heat Power Engineering Lab", 1.5], ["Mechanical Workshop IV", 1.5], ["Minor Project", 2]],
-
-        5: [["Design of Automotive Components", 4], ["Vehicle Diagnostics and Service", 4], ["Program Elective", 4],
-            ["Vehicle Testing Lab", 1.5], ["Automobile Service Lab II", 1.5], ["Program Elective Lab", 1.5], ["Seminar", 1]],
-
-        6: [["Entrepreneurship and Startup", 4], ["Program Elective", 4], ["Open Elective", 4], ["Advanced Vehicle Testing Lab", 2.5],
-            ["Advanced CAD Lab", 1.5], ["Program Elective Lab", 1.5], ["Major Project", 4]]
-    },
-    electrical: {
-         1: [["Communication Skills in English", 4], ["Mathematics I", 5], ["Applied Physics I", 3],
-            ["Applied Chemistry", 3], ["Engineering Graphics", 1.5], ["Applied Chemistry Lab", 1],
-            ["Introduction to IT Systems Lab", 2], ["Sports and Yoga", 1]],
-
-        2: [["Mathematics II", 4], ["Applied Physics II", 3], ["Environmental Science", 0],
-            ["Fundamentals of Electrical & Electronics Engineering", 3], ["Elementary Concepts of Electrical Systems", 3],
-            ["Communication Skills in English Lab", 1.5], ["Applied Physics Lab", 1], ["Engineering Workshop Practice", 1.5]],
-
-        3: [["Analog & Digital Circuits", 3], ["DC Machines & Traction Motors", 3], ["Fundamentals of Electric Circuits", 4],
-            ["Electrical & Electronics Measuring Instruments", 4], ["DC Machines Lab", 1.5], ["Electrical Measurements Lab", 1.5],
-            ["Electrical Workshop Practice", 1.5], ["Mechanical Engineering Lab", 1.5]],
-
-        4: [["Power Electronics Devices and Circuits", 4], ["Electrical Installation Design & Estimation", 4], ["Induction Machines", 4],
-            ["Electronics Lab", 1.5], ["Induction Machines Lab", 1.5], ["Domestic Appliances Repair & Maintenance Workshop", 1.5],
-            ["Minor Project", 2]],
-
-        5: [["Synchronous Machines & FHP Motors", 4], ["Electricity Generation, Transmission & Distribution", 4], 
-            ["Program Elective", 4], ["Synchronous Machines Lab", 1.5], ["Industrial Electrical Engineering Lab", 1.5], 
-            ["Program Elective Lab", 1.5], ["Seminar", 1]],
-
-        6: [["Entrepreneurship and Startup", 4], ["Program Elective", 4], ["Open Elective", 4],
-            ["Electrical Computer-Aided Drafting Lab", 1.5], ["Industrial Automation Lab", 2.5], 
-            ["Program Elective Lab", 1.5], ["Major Project", 4]]
-    }
-    
-    };
-
-    // Function to update semester options based on branch and student type
-    function updateSemesterSelection() {
-        let studentType = document.getElementById("studentType").value;
-        let branchSelect = document.getElementById("branchSelect").value;
-        let semesterSelect = document.getElementById("completedSemester");
-
-        semesterSelect.innerHTML = ""; // Clear the current options
-
-        let startSemester = (studentType === "lateral") ? 3 : 1;
-        let availableSemesters = Object.keys(branchSubjects[branchSelect]);
-
-        // Adjust semester options based on the branch and student type
-        for (let i = startSemester; i <= availableSemesters.length; i++) {
-            let option = document.createElement("option");
-            option.value = i;
-            option.textContent = "Semester " + i;
-            semesterSelect.appendChild(option);
-        }
-    }
-
-    function generateGradeInputs() {
-        let selectedBranch = document.getElementById("branchSelect").value;
-        let completedSemester = parseInt(document.getElementById("completedSemester").value);
-        let studentType = document.getElementById("studentType").value;
-        let output = document.getElementById("output");
-        output.innerHTML = "";
-
-        let startSemester = (studentType === "lateral") ? 3 : 1;
-
-        for (let sem = startSemester; sem <= completedSemester; sem++) {
-            let table = `<h3>Semester ${sem}</h3>
-                <table>
-                <tr>
-                    <th>Subject</th>
-                    <th>Credits</th>
-                    <th>Grade</th>
-                </tr>`;
-
-            branchSubjects[selectedBranch][sem].forEach(([subject, credit]) => {
-                table += `<tr>
-                    <td>${subject}</td>
-                    <td>${credit}</td>
-                    <td>
-                        <select class="gradeSelect" data-semester="${sem}" data-credit="${credit}" onchange="updateGradeStyle(this)">
-                            <option value="" selected disabled>Select Grade</option>
-                            <option value="S">S</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                            <option value="E">E</option>
-                            <option value="F">F</option>
-                        </select>
-                    </td>
-                </tr>`;
-            });
-
-            table += `</table><div id="semesterSgpa${sem}" class="result"></div><br>`;
-            output.innerHTML += table;
-        }
-
-        document.getElementById("calculateButton").style.display = "block";
-    }
-
-    function calculateCGPA() {
-        let totalPoints = 0, totalCredits = 0;
-        let semesterResults = {};
-
-        document.querySelectorAll(".gradeSelect").forEach(select => {
-            let gradePoint = {"S": 10, "A": 9, "B": 8, "C": 7, "D": 6, "E": 5, "F": 0}[select.value];
-            let credit = parseFloat(select.dataset.credit);
-            let semester = select.dataset.semester;
-
-            totalPoints += gradePoint * credit;
-            totalCredits += credit;
-
-            if (!semesterResults[semester]) semesterResults[semester] = { points: 0, credits: 0 };
-            semesterResults[semester].points += gradePoint * credit;
-            semesterResults[semester].credits += credit;
-        });
-
-        for (let sem in semesterResults) {
-            let cgpa = (semesterResults[sem].points / semesterResults[sem].credits).toFixed(2);
-            document.getElementById(`semesterSgpa${sem}`).innerHTML = `Semester ${sem} SGPA: <strong>${cgpa}</strong>`;
-        }
-
-        document.getElementById("cgpaResult").innerHTML = `Overall CGPA: <strong>${(totalPoints / totalCredits).toFixed(2)}</strong>`;
-// Show the download button after calculation
-        document.getElementById("screenshotButton").style.display = "block";
-    }
-
-   function downloadScreenshot() {
-    window.scrollTo(0, 0); // Ensure the page is at the top before capturing
-
-    html2canvas(document.documentElement, {
-        scale: 2, // High resolution
-        useCORS: true, // Fix external font issues
-        backgroundColor: "#0a0f1e", // Keep the theme
-        scrollX: 0,
-        scrollY: -window.scrollY, // Ensure it captures from the top
-        windowWidth: document.documentElement.scrollWidth,
-        windowHeight: document.documentElement.scrollHeight
-    }).then(canvas => {
-        let link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "CGPA_Calculator_Full.png";
-        link.click();
-    });
-}
-
-
-
-
-    updateSemesterSelection();
-</script>
-
-
+    <div class="container">
+        <h1>Welcome to SSM CGPA Calculator</h1>
+        <p>Calculate your CGPA easily with our simple tool. Just enter your grades and let us do the rest!</p>
+        <a href="calculator.html" class="btn">Start Calculating</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 SSM CGPA Calculator. All rights reserved.</p>
+    </footer>
 
 </body>
-
-
 </html>
