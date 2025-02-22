@@ -5,39 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SSM CGPA Calculator</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        
+        /* General Styles */
         body {
+            font-family: Arial, sans-serif;
+            text-align: center;
             background: linear-gradient(to right, #6a11cb, #2575fc);
             color: white;
-            text-align: center;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease;
         }
-
+        
         .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            padding: 50px;
         }
 
         h1 {
             font-size: 28px;
-            margin-bottom: 10px;
         }
 
         p {
             font-size: 18px;
-            margin-bottom: 20px;
         }
 
+        /* Button Styling */
         .btn {
             display: inline-block;
             background: #ffcc00;
@@ -47,31 +38,81 @@
             font-weight: bold;
             text-decoration: none;
             border-radius: 5px;
-            transition: 0.3s ease;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border: none;
+            cursor: pointer;
         }
 
         .btn:hover {
             background: #ffdd44;
+            transform: scale(1.05);
         }
 
-        footer {
-            margin-top: 30px;
+        /* Dark Mode */
+        body.dark-mode {
+            background: #121212;
+            color: white;
+        }
+
+        .container.dark-mode {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
             font-size: 14px;
-            opacity: 0.8;
+        }
+
+        .toggle-btn:hover {
+            background: #ddd;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <button class="toggle-btn" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
     <div class="container">
         <h1>Welcome to SSM CGPA Calculator</h1>
-        <p>Calculate your CGPA easily with our simple tool. Just enter your grades and let us do the rest!</p>
-        <a href="calculator.html" class="btn">Start Calculating</a>
+        <p>Calculate your CGPA easily with our simple tool.</p>
+        <button class="btn">Start Calculating</button>
     </div>
 
-    <footer>
-        <p>&copy; 2025 SSM CGPA Calculator. All rights reserved.</p>
-    </footer>
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+            document.querySelector(".container").classList.toggle("dark-mode");
+        }
+    </script>
 
 </body>
 </html>
